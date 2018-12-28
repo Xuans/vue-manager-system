@@ -3,31 +3,32 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="service icon-service-rds_mysqlyunshujukuRDSMy"></i> 数据库监控
+                    <i class="service icon-service-rds_mysqlyunshujukuRDSMy"></i> 监控
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+
         <div class="container">
             <div class="form-tab">
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="height: 60px;">
-                    <el-tab-pane name="first">
+                    <el-tab-pane name="StatusWatcher">
                         <span slot="label"><i class="service icon-service-icon-test"></i> 状态监控</span>
                     </el-tab-pane>
-                    <el-tab-pane name="second">
+                    <el-tab-pane name="DateBaseWatcher">
                         <span slot="label"><i class="service icon-service-database"></i> 数据库查询</span>
                     </el-tab-pane>
-                    <el-tab-pane name="third">
-                        <span slot="label"><i class="service icon-service-table"></i> 表信息查询</span>
+                    <el-tab-pane name="MysqlWatcher">
+                        <span slot="label"><i class="service icon-service-window"></i> 数据库终端窗口</span>
                     </el-tab-pane>
-                    <el-tab-pane name="fourth">
-                        <span slot="label"><i class="service icon-service-window"></i> 终端窗口</span>
+                    <el-tab-pane name="RedisWatcher">
+                        <span slot="label"><i class="service icon-service-table"></i> Redis终端窗口</span>
                     </el-tab-pane>
                 </el-tabs>
             </div>
 
             <div class="form-bottom">
                 <!-- 数据监控 -->
-                <div v-if="first">
+                <div v-if="StatusWatcher">
                     <el-collapse accordion>
                         <el-collapse-item title=" SHOW STATUS">
                             <!--<el-input-->
@@ -40,7 +41,7 @@
                                 height="250"
                                 stripe
                                 border
-                                :data="firstTableData_1"
+                                :data="StatusWatcherTableData_1"
                                 style="width: 100%">
                                 <el-table-column
                                     prop="VariableName"
@@ -58,7 +59,7 @@
                                 height="250"
                                 stripe
                                 border
-                                :data="firstTableData_2"
+                                :data="StatusWatcherTableData_2"
                                 style="width: 100%"
                                 :default-sort="{prop: 'Id', order: 'ascending'}">
                                 <el-table-column
@@ -110,8 +111,9 @@
                         </el-collapse-item>
                     </el-collapse>
                 </div>
+
                 <!-- 表获取 -->
-                <div v-if="second">
+                <div v-if="DateBaseWatcher">
                     <tr>
                         <td style="width:210px;float:left;">
                             <el-select v-model="database" clearable placeholder="请选择数据库实例">
@@ -139,7 +141,7 @@
                         height="250"
                         stripe
                         border
-                        :data="secondTableData"
+                        :data="DateBaseWatcherTableData"
                         style="width: 100%">
                         <el-table-column
                             prop="Alias"
@@ -187,8 +189,17 @@
                     </el-table>
                 </div>
 
-                <div v-if="third">third</div>
-                <div v-if="fourth">fourth</div>
+                <div v-if="MysqlWatcher">
+                    <iframe src="http://118.25.187.175:9090" scrolling="auto" frameborder="1"
+                            height="400" width="1000"
+                            style="position:relative;"></iframe>
+                </div>
+
+                <div v-if="RedisWatcher">
+                    <iframe src="http://118.25.187.175:9091" scrolling="auto" frameborder="1"
+                            height="400" width="1000"
+                            style="position:relative;"></iframe>
+                </div>
             </div>
         </div>
 
@@ -216,20 +227,20 @@
         data() {
             return {
                 //tabs切换
-                first: true,
-                second: false,
-                third: false,
-                fourth: false,
-                activeName: "first",
+                StatusWatcher: true,
+                DateBaseWatcher: false,
+                MysqlWatcher: false,
+                RedisWatcher: false,
+                activeName: "StatusWatcher",
 
                 //tab-1
                 search_1: '',
-                firstTableData_1: [],
-                firstTableData_2: [],
+                StatusWatcherTableData_1: [],
+                StatusWatcherTableData_2: [],
 
                 //tab-2
                 search_2: '',
-                secondTableData: [],
+                DateBaseWatcherTableData: [],
                 database: '',
                 database_select: [],
                 tableColumns: [],
@@ -238,38 +249,36 @@
         },
         methods: {
             handleClick(tab, event) {
-                if (this.activeName == "first") {
+                if (this.activeName === "StatusWatcher") {
                     this.ShowProcess();
-                    this.first = true;
-                    this.second = false;
-                    this.third = false;
-                    this.fourth = false;
-                } else if (this.activeName == "second") {
+                    this.StatusWatcher = true;
+                    this.DateBaseWatcher = false;
+                    this.MysqlWatcher = false;
+                    this.RedisWatcher = false;
+                } else if (this.activeName === "DateBaseWatcher") {
                     this.QryDataBase();
-                    this.first = false;
-                    this.second = true;
-                    this.third = false;
-                    this.fourth = false;
-                } else if (this.activeName == "third") {
-                    this.first = false;
-                    this.second = false;
-                    this.third = true;
-                    this.fourth = false;
-                } else if (this.activeName == "fourth") {
-                    this.first = false;
-                    this.second = false;
-                    this.third = false;
-                    this.fourth = true;
+                    this.StatusWatcher = false;
+                    this.DateBaseWatcher = true;
+                    this.MysqlWatcher = false;
+                    this.RedisWatcher = false;
+                } else if (this.activeName === "MysqlWatcher") {
+                    this.StatusWatcher = false;
+                    this.DateBaseWatcher = false;
+                    this.MysqlWatcher = true;
+                    this.RedisWatcher = false;
+                } else if (this.activeName === "RedisWatcher") {
+                    this.StatusWatcher = false;
+                    this.DateBaseWatcher = false;
+                    this.MysqlWatcher = false;
+                    this.RedisWatcher = true;
                 }
             },
             async ShowProcess() {
-                let dataObj = {};
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "DataBaseSrv", "ShowProcess", obj);
-                if (res.code == 0) {
-                    this.firstTableData_1 = res.data.Status;
-                    this.firstTableData_2 = res.data.ProcessList;
-                } else if (res.code == 1) {
+                let res = await utils.http.simpleMicroPost( "DataBaseSrv", "ShowProcess", {});
+                if (res.code === 0) {
+                    this.StatusWatcherTableData_1 = res.data.Status;
+                    this.StatusWatcherTableData_2 = res.data.ProcessList;
+                } else if (res.code === 1) {
                     this.$message({
                         message: '登录状态过期，请重新登录',
                         type: 'warning'
@@ -283,12 +292,10 @@
                 }
             },
             async QryDataBase() {
-                let dataObj = {};
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "DataBaseSrv", "QryDataBase", obj);
-                if (res.code == 0) {
+                let res = await utils.http.simpleMicroPost( "DataBaseSrv", "QryDataBase", {});
+                if (res.code === 0) {
                     this.database_select = res.data;
-                } else if (res.code == 1) {
+                } else if (res.code === 1) {
                     this.$message({
                         message: '登录状态过期，请重新登录',
                         type: 'warning'
@@ -304,11 +311,11 @@
             async QryTables(database) {
                 let dataObj = {};
                 dataObj.Alias = database;
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "DataBaseSrv", "QryTables", obj);
-                if (res.code == 0) {
-                    this.secondTableData = res.data.Tables;
-                } else if (res.code == 1) {
+
+                let res = await utils.http.simpleMicroPost( "DataBaseSrv", "QryTables", dataObj);
+                if (res.code === 0) {
+                    this.DateBaseWatcherTableData = res.data.Tables;
+                } else if (res.code === 1) {
                     this.$message({
                         message: '登录状态过期，请重新登录',
                         type: 'warning'
@@ -325,12 +332,12 @@
                 let dataObj = {};
                 dataObj.Alias = row.Alias;
                 dataObj.TableName = row.TableName;
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "DataBaseSrv", "QryTableColumns", obj);
-                if (res.code == 0) {
+
+                let res = await utils.http.simpleMicroPost( "DataBaseSrv", "QryTableColumns", dataObj);
+                if (res.code === 0) {
                     this.tableColumns = res.data;
                     this.dialogTableVisible = true;
-                } else if (res.code == 1) {
+                } else if (res.code === 1) {
                     this.$message({
                         message: '登录状态过期，请重新登录',
                         type: 'warning'

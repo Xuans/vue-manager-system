@@ -98,8 +98,7 @@
                 dataObj.username = this.ruleForm.username;
                 dataObj.passwd = md5(this.ruleForm.password);
                 dataObj.passwdck = md5(this.ruleForm.passwordCheck);
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "LoginSrv", "Register", obj);
+                let res = await utils.http.simpleMicroPost( "LoginSrv", "Register", dataObj);
                 if (res.code === 0) {
                     //utils.dialog.showOKDialog("注册成功");
                     this.$message({
@@ -125,7 +124,7 @@
         position: relative;
         width: 100%;
         height: 100%;
-        background-image: url(../../assets/png-background/background.png);
+        background-image: url(../../../static/img/background/login-1.jpg);
         background-size: 100%;
     }
 
@@ -135,7 +134,7 @@
         text-align: center;
         font-size: 20px;
         color: #fff;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 2px solid #ddd;
     }
 
     .ms-register {
@@ -179,10 +178,4 @@
         margin-bottom: 10px;
     }
 
-    .login-tips {
-        font-size: 12px;
-        line-height: 30px;
-        color: #fff;
-
-    }
 </style>

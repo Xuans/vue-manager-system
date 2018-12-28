@@ -165,8 +165,7 @@
             async initTodoList() {
                 let dataObj = {};
                 dataObj.Date = this.date;
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "QryTodo", obj);
+                let res = await utils.http.simpleMicroPost( "TodoSrv", "QryTodo", dataObj);
                 if (res.code == 0) {
                     this.TODO = res.data.TodoList;
                     this.DOING = res.data.DoingList;
@@ -190,8 +189,8 @@
             async addTodoFunc() {
                 let dataObj = {};
                 dataObj.Context = this.addTODO;
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "AddTodo", obj);
+
+                let res = await utils.http.simpleMicroPost( "TodoSrv", "AddTodo", dataObj);
                 if (res.code == 0) {
                     await this.initTodoList();
                     this.addTODO = "";
@@ -202,8 +201,8 @@
             async removeItem(array, index) {
                 let dataObj = {};
                 dataObj.TodoID = array[index].TodoID;
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "DelTodo", obj);
+
+                let res = await utils.http.simpleMicroPost( "TodoSrv", "DelTodo", dataObj);
                 if (res.code == 0) {
                     await this.initTodoList();
                 } else {
@@ -217,35 +216,29 @@
                 if (event.from.id == "TODO" && event.to.id == "DOING") {
                     dataObj.TodoID = this.DOING[index].TodoID;
                     dataObj.Move2Type = 2;
-                    let obj = JSON.stringify(dataObj);
-                    res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "MoveTodo", obj);
+                    res = await utils.http.simpleMicroPost( "TodoSrv", "MoveTodo", dataObj);
                 } else if (event.from.id == "TODO" && event.to.id == "DONE") {
                     dataObj.TodoID = this.DONE[index].TodoID;
                     dataObj.Move2Type = 3;
-                    let obj = JSON.stringify(dataObj);
-                    res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "MoveTodo", obj);
+                    res = await utils.http.simpleMicroPost( "TodoSrv", "MoveTodo", dataObj);
                 } else if (event.from.id == "DOING" && event.to.id == "DONE") {
                     dataObj.TodoID = this.DONE[index].TodoID;
                     dataObj.Move2Type = 3;
-                    let obj = JSON.stringify(dataObj);
-                    res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "MoveTodo", obj);
+                    res = await utils.http.simpleMicroPost( "TodoSrv", "MoveTodo", dataObj);
                 } else if (event.from.id == "DOING" && event.to.id == "TODO") {
                     dataObj.TodoID = this.TODO[index].TodoID;
                     dataObj.Move2Type = 1;
-                    let obj = JSON.stringify(dataObj);
-                    res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "MoveTodo", obj);
+                    res = await utils.http.simpleMicroPost( "TodoSrv", "MoveTodo", dataObj);
                 } else if (event.from.id == "DONE" && event.to.id == "DOING") {
                     dataObj.TodoID = this.DOING[index].TodoID;
                     dataObj.Move2Type = 2;
-                    let obj = JSON.stringify(dataObj);
-                    res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "MoveTodo", obj);
+                    res = await utils.http.simpleMicroPost( "TodoSrv", "MoveTodo", dataObj);
                 } else if (event.from.id == "DONE" && event.to.id == "TODO") {
                     dataObj.TodoID = this.TODO[index].TodoID;
                     dataObj.Move2Type = 1;
-                    let obj = JSON.stringify(dataObj);
-                    res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "TodoSrv", "MoveTodo", obj);
+                    res = await utils.http.simpleMicroPost( "TodoSrv", "MoveTodo", dataObj);
                 }
-                if (res.code == 0) {
+                if (res.code === 0) {
                     this.$message.success(`从 ${event.from.id} 移动到 ${event.to.id} `);
                     await this.initTodoList();
                 } else {
@@ -256,7 +249,7 @@
                 await this.initTodoList();
             },
             async makesure() {
-                if (this.addTODO == "") {
+                if (this.addTODO === "") {
                     this.$message({
                         message: '写点内容再添加啊，老铁!',
                         type: 'warning',

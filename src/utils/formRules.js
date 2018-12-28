@@ -23,6 +23,20 @@ export function checkPassWord(rule, value, callback) {
     // return callback()
 }
 
+export function checkNickName(rule, value, callback) {
+    var han = /^[\u4e00-\u9fa5]+$/;
+    if (value == '' || value == undefined || value == null) {
+        callback();
+    } else {
+        if ((!han.test(value)) && value != '') {
+            callback(new Error('请输入正确的昵称'));
+        } else {
+            callback();
+        }
+    }
+    return callback(new Error('非法的昵称'))
+}
+
 export function isPhone(rule, value, callback) {
     if (!value) {
         return callback(new Error('输入不可以为空'));

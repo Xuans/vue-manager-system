@@ -103,11 +103,15 @@ async function simpleDelete(url, data, pathIsUrl = false) {
 /*
  * post method
  */
-async function simpleMicroPost(url, serviceName, methodName, hData, pathIsUrl = false) {
-    console.log("http req", hData);
+async function simpleMicroPost(serviceName, methodName, obj) {
+    let objData = JSON.stringify(obj);
+    //console.log("http req", objData);
     let res = await http({
-        url: pathIsUrl ? BASE_URL + url : url,
+        url: baseUrl+serviceName+"/"+methodName,
         method: 'post',
+        // headers: {
+        //     'Origin':'localhost'
+        // },
         data: (function () {
             let httpObject = new Object();
             httpObject.Version = 1;
@@ -116,32 +120,32 @@ async function simpleMicroPost(url, serviceName, methodName, hData, pathIsUrl = 
             httpObject.AppKey = "test1";
             let token = sessionStorage.getItem('ms_token');
             httpObject.Token = token ? token : "";
-            httpObject.Data = hData;
+            httpObject.Data = objData;
             let userid = sessionStorage.getItem('ms_userid');
             httpObject.UserID = userid ? parseInt(userid) : 0;
             httpObject.TimeStamp = parseInt(new Date().getTime().toString().slice(0, 10));
-            httpObject.SrcIP = "192.168.199.40";
             let beforeSing = "test1" + httpObject.TimeStamp + httpObject.Data + "micro@159357";
             httpObject.Sign = md5(beforeSing);
             return httpObject;
         })()
     });
-    if (typeof(res) == 'string') {
+    if (typeof(res) === 'string') {
         if (res.indexOf("MessageResponse(") != -1) {
             res = res.substr(30);
             res = res.substr(0, res.length - 2);
             res = JSON.parse(res)
         }
     }
-    console.log("http res", res);
+    //console.log("http res", res);
     return res;
 }
-
+const baseUrl= "http://www.micro.com/sync/";
 export {
     http,
     simplePost,
     simplePut,
     simpleDelete,
     simpleGet,
-    simpleMicroPost
+    simpleMicroPost,
+    baseUrl,
 };

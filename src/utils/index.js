@@ -1,4 +1,3 @@
-import {_moduleExtend} from "./_privateModule.js";
 import * as http from "./http.js";
 import * as object from "./object.js";
 import * as is from "./is.js";

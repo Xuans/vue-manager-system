@@ -127,7 +127,7 @@ a {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     box-sizing: border-box;
-    width: 360px;
+    width: 180px;
     height: 180px;
     text-align: center;
     cursor: pointer;
@@ -170,4 +170,9 @@ a {
 
 .v-note-wrapper .v-note-panel {
     min-height: 500px;
+}
+
+
+#dashboard .el-dialog .el-dialog__body {
+    text-align: center;
 }

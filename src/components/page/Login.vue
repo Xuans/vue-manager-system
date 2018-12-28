@@ -1,7 +1,7 @@
 <template>
     <div class="login-wrap">
         <div class="ms-login">
-            <div class="ms-title">后台管理系统</div>
+            <div class="ms-title">个人定制系统</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label="top" label-width="30%" class="ms-content">
                 <el-form-item label="账　号" prop="username">
                     <el-input v-model="ruleForm.username" placeholder="请输入您的账号">
@@ -14,7 +14,7 @@
                 </el-form-item>
 
                 <el-form-item label="验证码" prop="vcode">
-                    <el-input  v-model="ruleForm.vcode"
+                    <el-input v-model="ruleForm.vcode"
                               placeholder="请输入验证码" @keyup.enter.native="submitLogin('ruleForm')">
                         <el-button slot="append" class="vcode-right" type="warning"
                                    @keyup.enter="submitLogin('ruleForm')"
@@ -92,7 +92,7 @@
                         this.ruleForm.vcode = '';
                         this.ruleForm.vcodeCheck = this.generatedCode();
                         // alert("登录失败，用户名或密码错误");
-                       // utils.dialog.showWaringDialog("登录失败，用户名或密码错误");
+                        // utils.dialog.showWaringDialog("登录失败，用户名或密码错误");
                         this.$message.error('登录失败，用户名或密码错误');
                     }
                 });
@@ -104,20 +104,22 @@
                 dataObj.username = this.ruleForm.username;
                 dataObj.passwd = md5(this.ruleForm.passwd);
                 dataObj.platform = "Web";
-                let obj = JSON.stringify(dataObj);
-                let res = await utils.http.simpleMicroPost("http://www.micro.com:10086/sync", "LoginSrv", "Login", obj);
-                if (res.code == 0) {
+                let res = await utils.http.simpleMicroPost("LoginSrv", "Login", dataObj);
+                if (res.code === 0) {
                     sessionStorage.setItem("ms_username", this.ruleForm.username);
                     sessionStorage.setItem("ms_userid", res.data.userid);
                     sessionStorage.setItem("ms_token", res.data.token);
+                    sessionStorage.setItem("ms_role", res.data.roleremark);
+                    sessionStorage.setItem("nickname", res.data.nickname);
+                    sessionStorage.setItem("avator", res.data.avatorurl);
                     this.$router.push('/');
-                } else if(res.code == 1) {
+                } else if (res.code === 1) {
                     this.$message({
                         message: '登录状态过期，请重新登录',
                         type: 'warning'
                     });
                     this.$router.push('/');
-                }else {
+                } else {
                     this.$refs[formName].resetFields();
                     this.ruleForm.username = '';
                     this.ruleForm.passwd = '';
@@ -131,7 +133,7 @@
             },
             forgetPassword() {
                 this.$message({
-                    message: '忘记密码功能暂未实现，敬请期待',
+                    message: '功能暂未实现，敬请期待',
                     type: 'success'
                 });
             },
@@ -161,7 +163,7 @@
         position: relative;
         width: 100%;
         height: 100%;
-        background-image: url(../../assets/png-background/background.png);
+        background-image: url(../../../static/img/background/login-3.jpg);
         background-size: 100%;
     }
 
@@ -170,8 +172,8 @@
         line-height: 50px;
         text-align: center;
         font-size: 20px;
-        color: #0099CC;
-        border-bottom: 1px solid #ddd;
+        color: #fff;
+        border-bottom: 2px solid #ddd;
     }
 
     .ms-login {

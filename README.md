@@ -1,8 +1,7 @@
 # vue-manage-system #
-基于Vue.js 2.x系列 + Element UI 的后台管理系统解决方案。
-配套个人go语言微服务框架。
-vue原型参考 https://github.com/lin-xin/manage-system/blob/master/
+基于lin-xin的Vue.js 2.x系列 + Element UI 的后台管理系统解决方案。[线上地址](http://blog.gdfengshuo.com/example/work/)
 
+[更新日志](https://github.com/lin-xin/vue-manage-system/releases)
 
 ## 功能 ##
 - [x] Element UI
@@ -21,6 +20,7 @@ vue原型参考 https://github.com/lin-xin/manage-system/blob/master/
 - [x] 404 / 403
 - [x] 三级菜单
 - [x] 自定义图标
+- [x] WebSocket
 
 
 ## 目录结构介绍 ##
@@ -189,11 +189,5 @@ import 'element-ui/lib/theme-default/index.css';    // 默认主题
 
 第三步：打开 src/components/common/Sidebar.vue 文件，找到 el-menu 标签，把 background-color/text-color/active-text-color 属性去掉即可。
 
-## 项目截图 ##
-### 默认皮肤 ###
 
-![Image text](https://github.com/lin-xin/manage-system/raw/master/screenshots/wms1.png)
 
-### 浅绿色皮肤 ###
-
-![Image text](https://github.com/lin-xin/manage-system/raw/master/screenshots/wms2.png)
